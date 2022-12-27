@@ -26,7 +26,6 @@ You will need Python 3 installed on your machine to run these programs. You may 
 ## Built With
 
 * [Python 3](https://www.python.org/) - The programming language used
-* [Pillow](https://pillow.readthedocs.io/en/stable/) - An image manipulation library used in some projects
 
 ## Author
 
