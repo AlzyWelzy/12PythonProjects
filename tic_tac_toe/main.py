@@ -7,7 +7,9 @@ def draw_board():
         print(" ".join(row))
 
 
-def get_move():
+def get_move(player):
+    print(f"\nPlayer {player}'s turn")
+    row, col = None, None
     while True:
         try:
             row = int(input("Enter row (0, 1, or 2): "))
@@ -48,32 +50,38 @@ def check_draw():
 
 
 def main():
+    player1_name = input("Player 1, enter your name: ")
+    player2_name = input("Player 2, enter your name: ")
     while True:
-        print("Welcome to Tic-Tac-Toe!\n")
-        player1_symbol = input("Player 1, choose your symbol (X or O): ").upper()
+        print(f"\nWelcome to Tic-Tac-Toe, {player1_name} and {player2_name}!\n")
+        player1_symbol = input(f"{player1_name}, choose your symbol (X or O): ").upper()
         if player1_symbol == "X":
             player2_symbol = "O"
         else:
             player2_symbol = "X"
         draw_board()
-        player = player1_symbol
+        player = player1_name
         while True:
-            print(f"\nPlayer {player}'s turn")
-            row, col = get_move()
-            board[row][col] = player
+            row, col = get_move(player)
+            if player == player1_name:
+                symbol = player1_symbol
+            else:
+                symbol = player2_symbol
+            board[row][col] = symbol
             draw_board()
-            if has_won(player):
-                print(f"\nPlayer {player} has won!")
+            if has_won(symbol):
+                print(f"\n{player} has won!")
                 break
             if check_draw():
                 print("\nGame is a draw!")
                 break
-            if player == player1_symbol:
-                player = player2_symbol
+            if player == player1_name:
+                player = player2_name
             else:
-                player = player1_symbol
+                player = player1_name
         if not input("\nWould you like to play again? (y/n) ").lower().startswith("y"):
             break
 
 
-main()
+if __name__ == "__main__":
+    main()
