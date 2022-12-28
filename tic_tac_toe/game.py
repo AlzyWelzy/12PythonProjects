@@ -96,10 +96,10 @@ def play(game, x_player, o_player, print_game=True):
 
 
 if __name__ == '__main__':
-    x_player = SmartComputerPlayer('X')
-    o_player = HumanPlayer('O')
-    t = TicTacToe()
-    play(t, x_player, o_player, print_game=True)
+    # x_player = SmartComputerPlayer('X')
+    # o_player = HumanPlayer('O')
+    # t = TicTacToe()
+    # play(t, x_player, o_player, print_game=True)
 
     # for normal game
     # x_player = HumanPlayer("X")
@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
     for _ in range(1000):
         x_player = RandomComputerPlayer("X")
-        o_player = GeniusComputerPlayer("O")
+        o_player = SmartComputerPlayer("O")
         t = TicTacToe()
         result = play(t, x_player, o_player, print_game=False)
         if result == 'X':
