@@ -112,7 +112,7 @@ if __name__ == '__main__':
     o_wins = 0
     ties = 0
 
-    for _ in range(1000):
+    for _ in range(3):
         x_player = RandomComputerPlayer("X")
         o_player = SmartComputerPlayer("O")
         t = TicTacToe()
