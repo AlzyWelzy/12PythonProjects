@@ -84,20 +84,26 @@ if __name__ == '__main__':
     lake = Image(filename='lake.png')
     city = Image(filename='city.png')
 
-    brighten_im = adjust_brightness(lake, 1.7)
-    brighten_im.write_image('brightened.png')
+    # brightening
+    brightened_im = brighten(lake, 1.7)
+    brightened_im.write_image('brightened.png')
 
-    darkened_img = adjust_brightness(lake, 0.1)
-    darkened_img.write_image("darkened.png ")
+    # darkening
+    darkened_im = brighten(lake, 0.3)
+    darkened_im.write_image('darkened.png')
 
+    # increase contrast
     incr_contrast = adjust_contrast(lake, 2, 0.5)
-    incr_contrast.write_image("incr-contrast.png")
+    incr_contrast.write_image('increased_contrast.png')
 
-    decr_contrast = adjust_contrast(lake, 0.25, 0.5)
-    decr_contrast.write_image("incr-contrast.png")
+    # decrease contrast
+    decr_contrast = adjust_contrast(lake, 0.5, 0.5)
+    decr_contrast.write_image('decreased_contrast.png')
 
+    # blur using kernel 3
     blur_3 = blur(city, 3)
-    blur_3.write_image("blue_3_city.png")
+    blur_3.write_image('blur_k3.png')
 
+    # blur using kernel size of 15
     blur_15 = blur(city, 15)
-    blur_15.write_image("blue_15_city.png")
+    blur_15.write_image('blur_k15.png')
