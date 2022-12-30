@@ -39,11 +39,13 @@ class Board:
     def get_num_neighboring_bombs(self, row, col):
         num_neighboring_bombs = 0
         for r in range(max(0, row-1), min(self.dim_size-1, row+1)+1):
-            for c in range(max(0, col-1), min(self.dim_size - 1, (col+1))+1):
+            for c in range(max(0, col-1), min(self.dim_size - 1, col+1)+1):
                 if r == row and c == col:
                     continue
                 if self.board[r][c] == "*":
                     num_neighboring_bombs += 1
+
+        return num_neighboring_bombs
 
     def dig(self, row, col):
         self.dug.add((row, col))
