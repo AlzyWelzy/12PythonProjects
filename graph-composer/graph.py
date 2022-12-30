@@ -1,8 +1,9 @@
 """
-Implemented Markov Chain Composer Graph object by Kylie Ying
+Implemented Markov Chain Composer Graph object by Alzy Welzy
 """
 
 import random
+
 
 class Vertex(object):
     def __init__(self, value):
@@ -31,7 +32,6 @@ class Vertex(object):
 
     def next_word(self):
         return random.choices(self.neighbors, weights=self.neighbors_weights)[0]
-
 
 
 class Graph(object):

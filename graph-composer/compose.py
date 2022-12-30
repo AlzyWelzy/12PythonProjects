@@ -1,5 +1,5 @@
 """
-Implemented Markov Chain Composer by Kylie Ying
+Implemented Markov Chain Composer by Alzy Welzy
 """
 
 import os
