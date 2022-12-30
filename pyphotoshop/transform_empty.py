@@ -3,18 +3,22 @@ from image import Image
 import numpy as np
 
 
-def adjust_brightness(image, factor):
+def brighten(image, factor):
     # when we brighten, we just want to make each channel higher by some amount
     # factor is a value > 0, how much you want to brighten the image by (< 1 = darken, > 1 = brighten)
+    # represents x, y pixels of image, # channels (R, G, B)
     x_pixels, y_pixels, num_channels = image.array.shape
+    # making a new array to copy values to!
     new_im = Image(x_pixels=x_pixels, y_pixels=y_pixels,
                    num_channels=num_channels)
 
+    # # this is the non vectorized version
     # for x in range(x_pixels):
     #     for y in range(y_pixels):
     #         for c in range(num_channels):
-    #             new_im.array[x, y, c] = image.array[x, y, c]*factor
+    #             new_im.array[x, y, c] = image.array[x, y, c] * factor
 
+    # faster version that leverages numpy
     new_im.array = image.array * factor
 
     return new_im
@@ -22,16 +26,16 @@ def adjust_brightness(image, factor):
 
 def adjust_contrast(image, factor, mid):
     # adjust the contrast by increasing the difference from the user-defined midpoint by factor amount
+    # represents x, y pixels of image, # channels (R, G, B)
     x_pixels, y_pixels, num_channels = image.array.shape
+    # making a new array to copy values to!
     new_im = Image(x_pixels=x_pixels, y_pixels=y_pixels,
                    num_channels=num_channels)
-
-    # for x in range(x_pixels):
-    #     for y in range(y_pixels):
-    #         for c in range(num_channels):
-    #             new_im.array[x, y, c] = (image.array[x, y, c] - mid)*factor+mid
-
-    new_im.array = (image.array-mid)*factor+mid
+    for x in range(x_pixels):
+        for y in range(y_pixels):
+            for c in range(num_channels):
+                new_im.array[x, y, c] = (
+                    image.array[x, y, c] - mid) * factor + mid
 
     return new_im
 
@@ -40,21 +44,23 @@ def blur(image, kernel_size):
     # kernel size is the number of pixels to take into account when applying the blur
     # (ie kernel_size = 3 would be neighbors to the left/right, top/bottom, and diagonals)
     # kernel size should always be an *odd* number
+    # represents x, y pixels of image, # channels (R, G, B)
     x_pixels, y_pixels, num_channels = image.array.shape
+    # making a new array to copy values to!
     new_im = Image(x_pixels=x_pixels, y_pixels=y_pixels,
                    num_channels=num_channels)
-
+    # this is a variable that tells us how many neighbors we actually look at (ie for a kernel of 3, this value should be 1)
     neighbor_range = kernel_size // 2
-
     for x in range(x_pixels):
         for y in range(y_pixels):
             for c in range(num_channels):
+                # we are going to use a naive implementation of iterating through each neighbor and summing
+                # there are faster implementations where you can use memoization, but this is the most straightforward for a beginner to understand
                 total = 0
-                for x_i in range(max(0, x-neighbor_range), min(x_pixels-1, x+neighbor_range)+1):
-                    for y_i in range(max(0, y-neighbor_range), min(y_pixels-1, y+neighbor_range)+1):
+                for x_i in range(max(0, x-neighbor_range), min(new_im.x_pixels-1, x+neighbor_range)+1):
+                    for y_i in range(max(0, y-neighbor_range), min(new_im.y_pixels-1, y+neighbor_range)+1):
                         total += image.array[x_i, y_i, c]
-                new_im.array[x, y, c] = total/(kernel_size**2)
-
+                new_im.array[x, y, c] = total / (kernel_size ** 2)
     return new_im
 
 
