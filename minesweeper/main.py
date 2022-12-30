@@ -55,8 +55,8 @@ class Board:
         elif self.board[row][col] > 0:
             return True
 
-        for r in range(max(0, row-1), min(self.dim_size-1, (row+1))+1):
-            for c in range(max(0, col-1), min(self.dim_size - 1, (col+1))+1):
+        for r in range(max(0, row-1), min(self.dim_size-1, row+1)+1):
+            for c in range(max(0, col-1), min(self.dim_size - 1, col+1)+1):
                 if (r, c) in self.dug:
                     continue
                 self.dig(r, c)
