@@ -40,7 +40,22 @@ def blur(image, kernel_size):
     # kernel size is the number of pixels to take into account when applying the blur
     # (ie kernel_size = 3 would be neighbors to the left/right, top/bottom, and diagonals)
     # kernel size should always be an *odd* number
-    pass
+    x_pixels, y_pixels, num_channels = image.array.shape
+    new_im = Image(x_pixels=x_pixels, y_pixels=y_pixels,
+                   num_channels=num_channels)
+
+    neighbor_range = kernel_size // 2
+
+    for x in range(x_pixels):
+        for y in range(y_pixels):
+            for c in range(num_channels):
+                total = 0
+                for x_i in range(max(0, x-neighbor_range), min(x_pixels-1, x+neighbor_range)+1):
+                    for y_i in range(max(0, y-neighbor_range), min(y_pixels-1, y+neighbor_range)+1):
+                        total += image.array[x_i, y_i, c]
+                new_im.array[x, y, c] = total/(kernel_size**2)
+
+    return new_im
 
 
 def apply_kernel(image, kernel):
@@ -68,3 +83,15 @@ if __name__ == '__main__':
 
     darkened_img = adjust_brightness(lake, 0.1)
     darkened_img.write_image("darkened.png ")
+
+    incr_contrast = adjust_contrast(lake, 2, 0.5)
+    incr_contrast.write_image("incr-contrast.png")
+
+    decr_contrast = adjust_contrast(lake, 0.25, 0.5)
+    decr_contrast.write_image("incr-contrast.png")
+
+    blur_3 = blur(city, 3)
+    blur_3.write_image("blue_3_city.png")
+
+    blur_15 = blur(city, 15)
+    blur_15.write_image("blue_15_city.png")
