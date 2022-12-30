@@ -3,7 +3,7 @@ from image import Image
 import numpy as np
 
 
-def brighten(image, factor):
+def adjust_brightness(image, factor):
     # when we brighten, we just want to make each channel higher by some amount
     # factor is a value > 0, how much you want to brighten the image by (< 1 = darken, > 1 = brighten)
     x_pixels, y_pixels, num_channels = image.array.shape
@@ -50,5 +50,8 @@ if __name__ == '__main__':
     lake = Image(filename='lake.png')
     city = Image(filename='city.png')
 
-    brighten_im = brighten(lake, 1.7)
+    brighten_im = adjust_brightness(lake, 1.7)
     brighten_im.write_image('brightened.png')
+
+    darkened_img = adjust_brightness(lake, 0.1)
+    darkened_img.write_image("darkened.png")
