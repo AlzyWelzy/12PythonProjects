@@ -1,20 +1,10 @@
-"""
-Python Image Manipulation by Kylie Ying (modified from MIT 6.865)
 
-YouTube Kylie Ying: https://www.youtube.com/ycubed 
-Twitch KylieYing: https://www.twitch.tv/kylieying 
-Twitter @kylieyying: https://twitter.com/kylieyying 
-Instagram @kylieyying: https://www.instagram.com/kylieyying/ 
-Website: https://www.kylieying.com
-Github: https://www.github.com/kying18 
-Programmer Beast Mode Spotify playlist: https://open.spotify.com/playlist/4Akns5EUb3gzmlXIdsJkPs?si=qGc4ubKRRYmPHAJAIrCxVQ 
-"""
 
 from image import Image
 import numpy as np
 
 def brighten(image, factor):
-    # when we brighten, we just want to make each channel higher by some amount 
+    # when we brighten, we just want to make each channel higher by some amount
     # factor is a value > 0, how much you want to brighten the image by (< 1 = darken, > 1 = brighten)
     x_pixels, y_pixels, num_channels = image.array.shape  # represents x, y pixels of image, # channels (R, G, B)
     new_im = Image(x_pixels=x_pixels, y_pixels=y_pixels, num_channels=num_channels)  # making a new array to copy values to!
@@ -93,7 +83,7 @@ def combine_images(image1, image2):
             for c in range(num_channels):
                 new_im.array[x, y, c] = (image1.array[x, y, c]**2 + image2.array[x, y, c]**2)**0.5
     return new_im
-    
+
 if __name__ == '__main__':
     lake = Image(filename='lake.png')
     city = Image(filename='city.png')
