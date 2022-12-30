@@ -1,4 +1,5 @@
 import random
+import re
 
 
 class Board:
@@ -86,8 +87,23 @@ class Board:
 
         for i in range(len(visible_board)):
             row = visible_board[i]
+            string_rep += f'{i} |'
+            cells = []
+            for idx, col in enumerate(row):
+                format = '%-' + str(widths[idx]) + 's'
+                cells.append(format % (col))
+            string_rep += ' |'.join(cells)
+            string_rep += ' |\n'
+        str_len = int(len(string_rep) / self.dim_size)
+        string_rep = indices_row + '-'*str_len + '\n' + string_rep + '-'*str_len
+
+        return string_rep
 
 
 def play(dim_size=10, num_bombs=10):
     board = Board(dim_size, num_bombs)
-    pass
+
+    while len(board.dug) < board.dim_size ** 2 - num_bombs:
+        print(board)
+        user_input = re.split(
+            ',(\\s)*', input("Where would you like to dig? Input as row, col: "))
