@@ -1,95 +1,126 @@
-from typing import List, Tuple
+import math
+import time
+from player import HumanPlayer, RandomComputerPlayer, SmartComputerPlayer
 
 
-class Game:
+class TicTacToe():
     def __init__(self):
-        self.board = [["-" for i in range(3)] for j in range(3)]
-        self.player1_name = None
-        self.player2_name = None
-        self.player1_symbol = None
-        self.player2_symbol = None
-        self.current_player = None
+        self.board = self.make_board()
+        self.current_winner = None
 
-    def draw_board(self):
-        print("Current board:")
-        for row in self.board:
-            print(" ".join(row))
+    @staticmethod
+    def make_board():
+        return [' ' for _ in range(9)]
 
-    def get_move(self, player: str) -> Tuple[int, int]:
-        print(f"\nPlayer {player}'s turn")
-        row, col = None, None
-        while True:
-            try:
-                row = int(input("Enter row (0, 1, or 2): "))
-                col = int(input("Enter column (0, 1, or 2): "))
-                if row in [0, 1, 2] and col in [0, 1, 2]:
-                    if self.board[row][col] == "-":
-                        return row, col
-                    else:
-                        print("That space is already occupied. Try again.")
-                else:
-                    print("Invalid input. Try again.")
-            except ValueError:
-                print("Invalid input. Try again.")
+    def print_board(self):
+        for row in [self.board[i*3:(i+1) * 3] for i in range(3)]:
+            print('| ' + ' | '.join(row) + ' |')
 
-    def has_won(self, player: str) -> bool:
-        # check rows
-        for row in self.board:
-            if row == [player, player, player]:
-                return True
-        # check columns
-        for col in range(3):
-            if self.board[0][col] == player and self.board[1][col] == player and self.board[2][col] == player:
-                return True
-        # check diagonals
-        if self.board[0][0] == player and self.board[1][1] == player and self.board[2][2] == player:
-            return True
-        if self.board[0][2] == player and self.board[1][1] == player and self.board[2][0] == player:
+    @staticmethod
+    def print_board_nums():
+        # 0 | 1 | 2
+        number_board = [[str(i) for i in range(j*3, (j+1)*3)]
+                        for j in range(3)]
+        for row in number_board:
+            print('| ' + ' | '.join(row) + ' |')
+
+    def make_move(self, square, letter):
+        if self.board[square] == ' ':
+            self.board[square] = letter
+            if self.winner(square, letter):
+                self.current_winner = letter
             return True
         return False
 
-    def check_draw(self) -> bool:
-        for row in self.board:
-            if "-" in row:
-                return False
-        return True
+    def winner(self, square, letter):
+        # check the row
+        row_ind = math.floor(square / 3)
+        row = self.board[row_ind*3:(row_ind+1)*3]
+        # print('row', row)
+        if all([s == letter for s in row]):
+            return True
+        col_ind = square % 3
+        column = [self.board[col_ind+i*3] for i in range(3)]
+        # print('col', column)
+        if all([s == letter for s in column]):
+            return True
+        if square % 2 == 0:
+            diagonal1 = [self.board[i] for i in [0, 4, 8]]
+            # print('diag1', diagonal1)
+            if all([s == letter for s in diagonal1]):
+                return True
+            diagonal2 = [self.board[i] for i in [2, 4, 6]]
+            # print('diag2', diagonal2)
+            if all([s == letter for s in diagonal2]):
+                return True
+        return False
 
-    def main(self):
-        while True:
-            self.player1_name = input("Player 1, enter your name: ")
-            self.player2_name = input("Player 2, enter your name: ")
-            print(f"\nWelcome to Tic-Tac-Toe, {self.player1_name} and {self.player2_name}!\n")
-            self.player1_symbol = input(f"{self.player1_name}, choose your symbol (X or O): ").upper()
-            if self.player1_symbol == "X":
-                self.player2_symbol = "O"
-            else:
-                self.player2_symbol = "X"
-            self.board = [["-" for i in range(3)] for j in range(3)]
-            self.current_player = self.player1_name
-            while True:
-                self.draw_board()
-                row, col = self.get_move(self.current_player)
-                if self.current_player == self.player1_name:
-                    symbol = self.player1_symbol
-                else:
-                    symbol = self.player2_symbol
-                self.board[row][col] = symbol
-                if self.has_won(symbol):
-                    self.draw_board()
-                    print(f"\n{self.current_player} has won!")
-                    break
-                if self.check_draw():
-                    self.draw_board()
-                    print("\nGame is a draw!")
-                    break
-                if self.current_player == self.player1_name:
-                    self.current_player = self.player2_name
-                else:
-                    self.current_player = self.player1_name
-            if not input("\nWould you like to play again? (y/n) ").lower().startswith("y"):
-                break
+    def empty_squares(self):
+        return ' ' in self.board
+
+    def num_empty_squares(self):
+        return self.board.count(' ')
+
+    def available_moves(self):
+        return [i for i, x in enumerate(self.board) if x == " "]
 
 
-if __name__ == "__main__":
-    game = Game()
-    game.main()
+def play(game, x_player, o_player, print_game=True):
+
+    if print_game:
+        game.print_board_nums()
+
+    letter = 'X'
+    while game.empty_squares():
+        if letter == 'O':
+            square = o_player.get_move(game)
+        else:
+            square = x_player.get_move(game)
+        if game.make_move(square, letter):
+
+            if print_game:
+                print(letter + ' makes a move to square {}'.format(square))
+                game.print_board()
+                print('')
+
+            if game.current_winner:
+                if print_game:
+                    print(letter + ' wins!')
+                return letter  # ends the loop and exits the game
+            letter = 'O' if letter == 'X' else 'X'  # switches player
+
+        time.sleep(.8)
+
+    if print_game:
+        print('It\'s a tie!')
+
+
+if __name__ == '__main__':
+    # x_player = SmartComputerPlayer('X')
+    # o_player = HumanPlayer('O')
+    # t = TicTacToe()
+    # play(t, x_player, o_player, print_game=True)
+
+    # for normal game
+    # x_player = HumanPlayer("X")
+    # o_player = GeniusComputerPlayer("O")
+    # t = TicTacToe()
+    # play(t, x_player, o_player, print_game=True)
+
+    # for comp vs comp
+    x_wins = 0
+    o_wins = 0
+    ties = 0
+
+    for _ in range(3):
+        x_player = RandomComputerPlayer("X")
+        o_player = SmartComputerPlayer("O")
+        t = TicTacToe()
+        result = play(t, x_player, o_player, print_game=False)
+        if result == 'X':
+            x_wins += 1
+        elif result == 'O':
+            o_wins += 1
+        else:
+            ties += 1
+    print(f"{x_wins} : {o_wins} : {ties}")
