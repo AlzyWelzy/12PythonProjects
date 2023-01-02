@@ -29,7 +29,7 @@ You will need Python 3 installed on your machine to run these programs. You may 
 
 ## Author
 
-* **Manvendra Rajpoot (AlzyWelzy)
+Manvendra Rajpoot (AlzyWelzy)
 
 ## License
 
